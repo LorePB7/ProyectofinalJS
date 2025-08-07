@@ -1,21 +1,22 @@
-let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+let carrito = JSON.parse(localStorage.getItem("carrito")) || []; // array para el carrito
 
-function agregarAlCarrito(id, menu) {
-  const producto = menu.find(p => p.id === id);
-  if (producto) {
-    const productoEnCarrito = carrito.find(item => item.id === id);
+function agregarAlCarrito(id,  menu) {
+  const prod = menu.find(p => p.id === id);
+  if (prod) {
+    const itemCarrito = carrito.find(item => item.id === id);
     
-    if (productoEnCarrito) {
-      productoEnCarrito.cantidad++;
+    if (itemCarrito) {
+      itemCarrito.cantidad++;
     } else {
       carrito.push({
-        ...producto,
+        ...prod, 
+        
         cantidad: 1
       });
     }
     
     guardarCarrito();
-    return producto;
+    return prod;
   }
   return null;
 }
@@ -37,26 +38,27 @@ function decrementarCantidad(index) {
 }
 
 function quitarDelCarrito(index) {
-  const productoEliminado = carrito[index];
+  const itemEliminado = carrito[index];
   carrito.splice(index, 1);
   guardarCarrito();
-  return productoEliminado;
+  return itemEliminado;
 }
 
+
 function calcularTotal() {
-  return carrito.reduce((acc, prod) => acc + (prod.precio * prod.cantidad), 0);
+  return carrito.reduce((total, item) => total + (item.precio * item.cantidad), 0);
 }
 
 function guardarCarrito() {
-  localStorage.setItem("carrito", JSON.stringify(carrito));
+  localStorage.setItem("carrito", JSON.stringify(carrito)); // guardo la info en localdStorage para que se mantengan los datos de las compras y del carrito
 }
 
 function obtenerCarrito() {
   return carrito;
 }
 
-function establecerCarrito(nuevoCarrito) {
-  carrito = nuevoCarrito;
+function establecerCarrito(carritoNuevo) {
+  carrito = carritoNuevo;
   guardarCarrito();
 }
 
@@ -70,7 +72,7 @@ function obtenerCantidadProductos() {
 }
 
 function carritoVacio() {
-  return carrito.length === 0;
+  return carrito.length == 0; // uso == aca
 }
 
 function formatearPrecio(precio) {
@@ -89,16 +91,10 @@ function validarProducto(producto) {
          producto.precio > 0;
 }
 
-function calcularDescuento(precioOriginal, precioCombo) {
-  const descuento = precioOriginal - precioCombo;
-  const porcentaje = (descuento / precioOriginal) * 100;
-  return {
-    descuento: descuento,
-    porcentaje: Math.round(porcentaje)
-  };
-}
+
 
 function generarIdPedido() {
+  // genero un id unico para cada pedido d compra
   return Date.now().toString(36) + Math.random().toString(36).substr(2);
 }
 
@@ -144,6 +140,7 @@ function limpiarStorage() {
     return false;
   }
 }
+
 
 function exportarCarrito(carrito) {
   try {

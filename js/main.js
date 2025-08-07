@@ -1,17 +1,18 @@
-let menu = [];
+let menu = []; // aca se guardan todos los productos
 
 let historialPedidos = JSON.parse(localStorage.getItem("historialPedidos")) || [];
 
 const numerosValidos = historialPedidos.map(p => p.numero).filter(n => typeof n === 'number' && !isNaN(n));
 let contadorPedidos = numerosValidos.length > 0 ? Math.max(...numerosValidos) : historialPedidos.length;
-
-const menuContainer = document.getElementById("menu-container");
-const carritoContainer = document.getElementById("carrito-container");
-const totalContainer = document.getElementById("total-container");
+const contenedorMenu = document.getElementById("menu-container");
+const contenedorCarrito = document.getElementById("carrito-container");
+const contenedorTotal = document.getElementById("total-container");
 const mensajeDiv = document.getElementById("mensaje");
-const confirmarBtn = document.getElementById("confirmar-btn");
-const vaciarBtn = document.getElementById("vaciar-btn");
-const historialBtn = document.getElementById("historial-btn");
+const botonConfirmar = document.getElementById("confirmar-btn");
+const botonVaciar = document.getElementById("vaciar-btn");
+const botonHistorial = document.getElementById("historial-btn");
+
+
 
 async function cargarProductos() {
   try {
@@ -31,7 +32,7 @@ async function cargarProductos() {
 }
 
 function renderMenu() {
-  menuContainer.innerHTML = "";
+  contenedorMenu.innerHTML = "";
   menu.forEach(producto => {
     const prodDiv = document.createElement("div");
     prodDiv.className = "producto-card";
@@ -45,7 +46,7 @@ function renderMenu() {
       </div>
     `;
     prodDiv.querySelector(".agregar-btn").addEventListener("click", () => agregarProductoAlCarrito(producto.id));
-    menuContainer.appendChild(prodDiv);
+    contenedorMenu.appendChild(prodDiv);
   });
 }
 
@@ -53,16 +54,16 @@ function agregarProductoAlCarrito(id) {
   const producto = agregarAlCarrito(id, menu);
   if (producto) {
     renderCarrito();
-    mostrarSweetAlert("¡Agregado!", `${producto.nombre} agregado al carrito`, "success");
+    mostrarSweetAlert("¡Agregado!", producto.nombre + " agregado al carrito", "success");
   }
 }
 
 function renderCarrito() {
-  carritoContainer.innerHTML = "";
+  contenedorCarrito.innerHTML = "";
   const carrito = obtenerCarrito();
   if (carrito.length === 0) {
-    carritoContainer.innerHTML = "<em>El carrito está vacío.</em>";
-    totalContainer.textContent = "";
+    contenedorCarrito.innerHTML = "<em>El carrito está vacío.</em>";
+    contenedorTotal.textContent = "";
     return;
   }
   
@@ -99,15 +100,15 @@ function renderCarrito() {
     
     itemDiv.querySelector(".eliminar-btn").addEventListener("click", () => quitarProductoDelCarrito(i));
     
-    carritoContainer.appendChild(itemDiv);
+    contenedorCarrito.appendChild(itemDiv);
   });
   
-  totalContainer.textContent = `Total: $${calcularTotal().toLocaleString()}`;
+  contenedorTotal.textContent = `Total: $${calcularTotal().toLocaleString()}`;
 }
 
 function incrementarCantidadProducto(index) {
   incrementarCantidad(index);
-  renderCarrito();
+  renderCarrito(); // actualizo el carrito
 }
 
 function decrementarCantidadProducto(index) {
@@ -231,13 +232,13 @@ async function mostrarHistorial() {
     return;
   }
 
-  const pedidosHTML = historialPedidos.map((pedido, idx) => {
-    const nro = (typeof pedido.numero === 'number' && !isNaN(pedido.numero)) ? pedido.numero : (historialPedidos.length - idx);
+  const htmlPedidos = historialPedidos.map((pedido, idx) => {
+    const numPedido = (typeof pedido.numero === 'number' && !isNaN(pedido.numero)) ? pedido.numero : (historialPedidos.length - idx);
     return `
     <div style="border: 1px solid #ddd; border-radius: 8px; padding: 15px; margin: 10px 0; background: #f9f9f9;">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
         <div>
-          <strong style="color: #17a2b8;"><i class="fas fa-hashtag"></i> Pedido #${nro}</strong>
+          <strong style="color: #667eea;"><i class="fas fa-hashtag"></i> Pedido #${numPedido}</strong>
         </div>
         <div style="text-align: right;">
           <strong style="color: #28a745; font-size: 1.1em;">$${pedido.total.toLocaleString()}</strong><br>
@@ -265,7 +266,7 @@ async function mostrarHistorial() {
     title: '<i class="fas fa-history"></i> Historial Completo de Pedidos',
     html: `
       <div style="max-height: 500px; overflow-y: auto; text-align: left;">
-        ${pedidosHTML}
+        ${htmlPedidos}
       </div>
     `,
     width: 600,
@@ -320,7 +321,7 @@ async function procesarCheckout() {
   });
   
   if (result.isConfirmed) {
-    contadorPedidos++;
+    contadorPedidos++; // incrementa el contador
     
     const nuevoPedido = {
       id: generarIdPedido(),
@@ -357,9 +358,9 @@ async function procesarCheckout() {
   }
 }
 
-confirmarBtn.addEventListener("click", procesarCheckout);
+botonConfirmar.addEventListener("click", procesarCheckout);
 
-vaciarBtn.addEventListener("click", async () => {
+botonVaciar.addEventListener("click", async () => {
   if (carritoVacio()) {
     mostrarSweetAlert("Carrito vacío", "No hay productos para vaciar", "info");
     return;
@@ -383,6 +384,6 @@ vaciarBtn.addEventListener("click", async () => {
   }
 });
 
-historialBtn.addEventListener("click", mostrarHistorial);
+botonHistorial.addEventListener("click", mostrarHistorial);
 
 cargarProductos();
