@@ -263,7 +263,7 @@ async function mostrarHistorial() {
   `}).join('');
 
   await Swal.fire({
-    title: '<i class="fas fa-history"></i> Historial Completo de Pedidos',
+    title: '<i class="fas fa-history"></i> Historial de pedidos',
     html: `
       <div style="max-height: 500px; overflow-y: auto; text-align: left;">
         ${htmlPedidos}
@@ -277,7 +277,7 @@ async function mostrarHistorial() {
 
 async function procesarCheckout() {
   if (carritoVacio()) {
-    mostrarSweetAlert("Carrito vacío", "Agregá productos antes de confirmar el pedido", "error");
+    mostrarSweetAlert("Carrito vacío", "No podes confirmar el pedido sin productos", "error");
     return;
   }
   
@@ -362,13 +362,12 @@ botonConfirmar.addEventListener("click", procesarCheckout);
 
 botonVaciar.addEventListener("click", async () => {
   if (carritoVacio()) {
-    mostrarSweetAlert("Carrito vacío", "No hay productos para vaciar", "info");
+    mostrarSweetAlert("Carrito vacío", "El carrito ya esta vacio", "info");
     return;
   }
   
   const result = await Swal.fire({
     title: '¿Vaciar carrito?',
-    text: 'Esta acción no se puede deshacer',
     icon: 'warning',
     showCancelButton: true,
     confirmButtonColor: '#dc3545',
