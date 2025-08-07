@@ -1,0 +1,424 @@
+/* Estilos generales */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  color: #333;
+}
+
+/* Header */
+header {
+  background: rgba(255, 255, 255, 0.95);
+  padding: 1.5rem;
+  text-align: center;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1.5rem;
+}
+
+header h1 {
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+  font-size: 2rem;
+}
+
+header h1 i {
+  margin-right: 0.5rem;
+  color: #3498db;
+}
+
+header p {
+  color: #7f8c8d;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+}
+
+/* Main content */
+main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1.5rem;
+}
+
+/* Sections */
+section {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+}
+
+section h2 {
+  color: #2c3e50;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  border-bottom: 2px solid #3498db;
+  padding-bottom: 0.5rem;
+}
+
+section h2 i {
+  margin-right: 0.5rem;
+  color: #3498db;
+}
+
+/* Menu container - Cards más pequeñas */
+#menu-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.producto-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  border: 1px solid #f0f0f0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  position: relative;
+}
+
+.producto-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+  border-color: #3498db;
+}
+
+.producto-imagen {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.producto-card:hover .producto-imagen {
+  transform: scale(1.05);
+}
+
+.producto-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.producto-info h3 {
+  color: #2c3e50;
+  margin-bottom: 0.3rem;
+  font-size: 1rem;
+  font-weight: 600;
+  flex-shrink: 0;
+  line-height: 1.2;
+}
+
+.producto-info .descripcion {
+  color: #7f8c8d;
+  margin-bottom: 0.5rem;
+  font-size: 0.8rem;
+  line-height: 1.3;
+  flex: 1;
+  min-height: 2.4rem; /* Altura mínima para 2 líneas */
+}
+
+.producto-info .precio {
+  color: #27ae60;
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  flex-shrink: 0;
+  text-shadow: 0 1px 2px rgba(39, 174, 96, 0.1);
+}
+
+.agregar-btn {
+  width: 100%;
+  background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+  color: white;
+  border: none;
+  padding: 0.6rem;
+  border-radius: 25px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+  margin-top: auto;
+  box-shadow: 0 2px 8px rgba(52, 152, 219, 0.3);
+}
+
+.agregar-btn:hover {
+  background: linear-gradient(135deg, #2980b9 0%, #1f5f8b 100%);
+  transform: scale(1.03);
+  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.4);
+}
+
+/* Carrito container - Más compacto */
+#carrito-container {
+  margin-bottom: 1rem;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.carrito-item {
+  background: #fff3cd;
+  border-radius: 8px;
+  padding: 0.7rem;
+  margin-bottom: 0.5rem;
+  border-left: 3px solid #ffc107;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.item-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;
+}
+
+.item-imagen {
+  width: 45px;
+  height: 45px;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 6px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  border: 2px solid #fff;
+}
+
+.item-details h4 {
+  color: #2c3e50;
+  margin-bottom: 0.2rem;
+  font-size: 0.9rem;
+}
+
+.item-precio {
+  color: #27ae60;
+  font-weight: 600;
+  font-size: 0.8rem;
+}
+
+.item-controles {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.cantidad-btn {
+  background: #6c757d;
+  color: white;
+  border: none;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+.cantidad-btn:hover {
+  background: #5a6268;
+  transform: scale(1.1);
+}
+
+.cantidad {
+  background: #fff;
+  padding: 0.2rem 0.5rem;
+  border-radius: 12px;
+  font-weight: bold;
+  color: #2c3e50;
+  min-width: 30px;
+  text-align: center;
+  font-size: 0.8rem;
+}
+
+.eliminar-btn {
+  background: #dc3545;
+  color: white;
+  border: none;
+  padding: 0.3rem;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: all 0.3s ease;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.eliminar-btn:hover {
+  background: #c82333;
+  transform: scale(1.1);
+}
+
+/* Total container */
+#total-container {
+  background: #d4edda;
+  padding: 0.8rem;
+  border-radius: 8px;
+  text-align: center;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #155724;
+  margin-bottom: 0.8rem;
+  border: 2px solid #28a745;
+}
+
+/* Botones de acción */
+#acciones-carrito {
+  display: flex;
+  gap: 0.8rem;
+  margin-bottom: 0.8rem;
+}
+
+#acciones-carrito button {
+  flex: 1;
+  padding: 0.8rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+#acciones-carrito button i {
+  margin-right: 0.5rem;
+}
+
+#confirmar-btn {
+  background: #28a745;
+  color: white;
+}
+
+#confirmar-btn:hover {
+  background: #218838;
+  transform: translateY(-2px);
+}
+
+#vaciar-btn {
+  background: #6c757d;
+  color: white;
+}
+
+#vaciar-btn:hover {
+  background: #5a6268;
+  transform: translateY(-2px);
+}
+
+/* Contenedor del botón historial */
+.historial-container {
+  margin-top: 1rem;
+  text-align: center;
+}
+
+/* Botón del historial */
+.historial-btn {
+  background: #17a2b8;
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 25px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 300px;
+}
+
+.historial-btn i {
+  margin-right: 0.5rem;
+}
+
+.historial-btn:hover {
+  background: #138496;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  padding: 1.5rem;
+  color: white;
+  margin-top: 1.5rem;
+}
+
+footer p {
+  font-size: 1rem;
+  opacity: 0.9;
+}
+
+footer p i {
+  margin-right: 0.5rem;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  main {
+    grid-template-columns: 1fr;
+    padding: 0 1rem;
+  }
+  
+  header h1 {
+    font-size: 1.8rem;
+  }
+  
+  section {
+    padding: 1rem;
+  }
+  
+  #menu-container {
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 0.8rem;
+  }
+  
+  .producto-imagen {
+    height: 120px;
+  }
+  
+  .carrito-item {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+  
+  .item-info {
+    justify-content: center;
+  }
+  
+  .item-controles {
+    justify-content: center;
+  }
+  
+  #acciones-carrito {
+    flex-direction: column;
+  }
+  
+  .historial-btn {
+    padding: 0.8rem 1.5rem;
+    font-size: 0.9rem;
+  }
+} 

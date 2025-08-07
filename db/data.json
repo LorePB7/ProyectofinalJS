@@ -1,0 +1,53 @@
+{
+  "productos": [
+    {
+      "id": 1,
+      "nombre": "Hamburguesa Clásica",
+      "descripcion": "Hamburguesa de carne con lechuga, tomate, cebolla y queso cheddar",
+      "precio": 10000,
+      "imagen": "assets/hamburguesa.jpg"
+    },
+    {
+      "id": 2,
+      "nombre": "Papas Fritas",
+      "descripcion": "Papas fritas crujientes con sal marina",
+      "precio": 4000,
+      "imagen": "assets/fritas.jpg"
+    },
+    {
+      "id": 3,
+      "nombre": "Lata de Coca-Cola",
+      "descripcion": "Lata de Coca-Cola de 350ml",
+      "precio": 3500,
+      "imagen": "assets/coca.jpg"
+    },
+    {
+      "id": 4,
+      "nombre": "Helado de frutilla",
+      "descripcion": "Helado de frutilla",
+      "precio": 4000,
+      "imagen": "assets/helado.jpg"
+    },
+    {
+      "id": 5,
+      "nombre": "Pizza 8 porciones",
+      "descripcion": "Pizza con salsa de tomate, mozzarella y albahaca fresca",
+      "precio": 12000,
+      "imagen": "assets/pizza.jpg"
+    },
+    {
+      "id": 6,
+      "nombre": "Ensalada César",
+      "descripcion": "Lechuga, crutones, queso parmesano y salsa César",
+      "precio": 4500,
+      "imagen": "assets/ensalada.jpg"
+    },
+    {
+      "id": 7,
+      "nombre": "Milanesa Napolitana",
+      "descripcion": "Milanesa con jamón, queso y salsa de tomate. Incluye papas fritas",
+      "precio": 12500,
+      "imagen": "assets/milanesa.jpg"
+    }
+  ]
+} 

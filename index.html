@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Simulador de Pedido - Comida Rápida</title>
+  <link rel="stylesheet" href="styles/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="js/carrito.js" defer></script>
+  <script src="js/main.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+
+  <header>
+    <h1><i class="fas fa-utensils"></i> Simulador de pedidos para comidas rapidas</h1>
+    <p>Arma tu pedido agregando productos al carrito, elegi el medio de pago, completa el formulario de envío y confirma tu pedido.</p>
+  </header>
+
+  <main>
+
+    <section id="menu-section">
+      <h2><i class="fas fa-list"></i> Menú</h2>
+      <div id="menu-container"></div>
+    </section>
+
+    <section id="carrito-section">
+      <h2><i class="fas fa-shopping-cart"></i> Carrito</h2>
+      <div id="carrito-container"></div>
+      <div id="total-container"></div>
+      <div id="acciones-carrito">
+        <button id="confirmar-btn"><i class="fas fa-check"></i> Confirmar pedido</button>
+        <button id="vaciar-btn"><i class="fas fa-trash"></i> Vaciar carrito</button>
+      </div>
+      <div id="mensaje"></div>
+
+      <div class="historial-container">
+        <button id="historial-btn" class="historial-btn"><i class="fas fa-history"></i> Ver Historial de Pedidos</button>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <p><i class="fas fa-user"></i> Lorenzo Píccolo - Entrega final proyecto Coderhouse</p>
+  </footer>
+
+</body>
+</html>
