@@ -6,11 +6,13 @@ function agregarAlCarrito(id,  menu) {
     const itemCarrito = carrito.find(item => item.id === id);
     
     if (itemCarrito) {
+      if (itemCarrito.cantidad >= prod.stock) {
+        return null;
+      }
       itemCarrito.cantidad++;
     } else {
       carrito.push({
         ...prod, 
-        
         cantidad: 1
       });
     }
@@ -22,9 +24,18 @@ function agregarAlCarrito(id,  menu) {
 }
 
 function incrementarCantidad(index) {
-  carrito[index].cantidad++;
+  const item = carrito[index];
+  const producto = menu.find(p => p.id === item.id);
+  
+  if (item.cantidad >= producto.stock) {
+    return false;
+  }
+  
+  item.cantidad++;
   guardarCarrito();
+  return true;
 }
+
 
 function decrementarCantidad(index) {
   if (carrito[index].cantidad > 1) {
@@ -50,17 +61,14 @@ function calcularTotal() {
 }
 
 function guardarCarrito() {
-  localStorage.setItem("carrito", JSON.stringify(carrito)); // guardo la info en localdStorage para que se mantengan los datos de las compras y del carrito
-}
+  localStorage.setItem("carrito", JSON.stringify(carrito));
+}  // guardo la info en localdStorage para que se mantengan los datos de las compras y del carrito
+
 
 function obtenerCarrito() {
   return carrito;
 }
 
-function establecerCarrito(carritoNuevo) {
-  carrito = carritoNuevo;
-  guardarCarrito();
-}
 
 function vaciarCarrito() {
   carrito = [];
@@ -72,91 +80,46 @@ function obtenerCantidadProductos() {
 }
 
 function carritoVacio() {
-  return carrito.length == 0; // uso == aca
+  return carrito.length == 0;
 }
 
-function formatearPrecio(precio) {
-  return precio.toLocaleString('es-AR', {
-    style: 'currency',
-    currency: 'ARS',
-    minimumFractionDigits: 0
-  });
-}
 
-function validarProducto(producto) {
-  return producto && 
-         producto.id && 
-         producto.nombre && 
-         producto.precio && 
-         producto.precio > 0;
-}
 
 
 
 function generarIdPedido() {
-  // genero un id unico para cada pedido d compra
-  return Date.now().toString(36) + Math.random().toString(36).substr(2);
-}
+  return Date.now().toString(36) + Math.random().toString(36).slice(2);
+}         // genero un id unico para cada pedido d compra
 
 function validarCarrito(carrito) {
   if (!Array.isArray(carrito)) {
     return false;
   }
   
-  return carrito.every(item => 
-    item && 
-    item.id && 
-    item.cantidad && 
-    item.cantidad > 0
-  );
-}
-
-function obtenerEstadisticasCarrito(carrito) {
-  if (!carrito || carrito.length === 0) {
-    return {
-      totalProductos: 0,
-      totalPrecio: 0,
-      productosUnicos: 0
-    };
-  }
-  
-  const totalProductos = carrito.reduce((acc, item) => acc + item.cantidad, 0);
-  const totalPrecio = carrito.reduce((acc, item) => acc + (item.precio * item.cantidad), 0);
-  const productosUnicos = carrito.length;
-  
-  return {
-    totalProductos,
-    totalPrecio,
-    productosUnicos
-  };
-}
-
-function limpiarStorage() {
-  try {
-    localStorage.removeItem("carrito");
-    return true;
-  } catch (error) {
-    console.error("Error limpiando localStorage:", error);
-    return false;
-  }
-}
-
-
-function exportarCarrito(carrito) {
-  try {
-    const carritoJSON = JSON.stringify(carrito, null, 2);
-    const blob = new Blob([carritoJSON], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
+  return carrito.every(item => {
+    if (!item || !item.id || !item.cantidad || item.cantidad <= 0) {
+      return false;
+    }
     
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `carrito-${Date.now()}.json`;
-    a.click();
+    const producto = menu.find(p => p.id === item.id);
+    if (!producto) {
+      return false;
+    }
     
-    URL.revokeObjectURL(url);
-    return true;
-  } catch (error) {
-    console.error("Error exportando carrito:", error);
-    return false;
-  }
-} 
+    return item.cantidad <= producto.stock;
+  });
+}
+
+
+
+function descontarStock(carrito) {
+  carrito.forEach(item => {
+    const producto = menu.find(p => p.id === item.id);
+    if (producto) {
+      producto.stock -= item.cantidad;
+    }
+  });
+}
+
+
+ 

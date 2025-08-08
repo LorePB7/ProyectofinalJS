@@ -11,6 +11,8 @@ const mensajeDiv = document.getElementById("mensaje");
 const botonConfirmar = document.getElementById("confirmar-btn");
 const botonVaciar = document.getElementById("vaciar-btn");
 const botonHistorial = document.getElementById("historial-btn");
+const botonStock = document.getElementById("stock-btn");
+const contadorCarrito = document.getElementById("contador-carrito");
 
 
 
@@ -18,26 +20,27 @@ async function cargarProductos() {
   try {
     const response = await fetch('./db/data.json');
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      throw new Error(`No se pudieron cargar los productos: ${response.status}`);
     }
     const data = await response.json();
     menu = data.productos;
-    renderMenu();
+    mostrarMenu();
   } catch (error) {
     console.error('Error cargando productos:', error);
     mostrarSweetAlert("Error", "No se pudieron cargar los productos", "error");
   } finally {
-    renderCarrito();
+    actualizarCarrito();
   }
 }
 
-function renderMenu() {
+function mostrarMenu() {
   contenedorMenu.innerHTML = "";
   menu.forEach(producto => {
     const prodDiv = document.createElement("div");
     prodDiv.className = "producto-card";
-    prodDiv.innerHTML = `
-      <img src="${producto.imagen}" alt="${producto.nombre}" class="producto-imagen" onerror="this.src='https://via.placeholder.com/300x200/cccccc/666666?text=${encodeURIComponent(producto.nombre)}'">
+    prodDiv.innerHTML = 
+    `
+      <img src="${producto.imagen}" alt="${producto.nombre}" class="producto-imagen">
       <div class="producto-info">
         <h3>${producto.nombre}</h3>
         <p class="descripcion">${producto.descripcion}</p>
@@ -53,14 +56,27 @@ function renderMenu() {
 function agregarProductoAlCarrito(id) {
   const producto = agregarAlCarrito(id, menu);
   if (producto) {
-    renderCarrito();
+    actualizarCarrito();
     mostrarSweetAlert("¡Agregado!", producto.nombre + " agregado al carrito", "success");
+  } else {
+    const prod = menu.find(p => p.id === id);
+    if (prod) {
+      const itemCarrito = obtenerCarrito().find(item => item.id === id);
+      if (itemCarrito && itemCarrito.cantidad >= prod.stock) {
+        mostrarSweetAlert("Sin stock", "No hay más unidades disponibles de " + prod.nombre, "warning");
+      }
+    }
   }
 }
 
-function renderCarrito() {
+function actualizarCarrito() {
   contenedorCarrito.innerHTML = "";
   const carrito = obtenerCarrito();
+  
+  // Actualizar contador
+  const cantidad = obtenerCantidadProductos();
+  contadorCarrito.textContent = cantidad > 0 ? `(${cantidad})` : "";
+  
   if (carrito.length === 0) {
     contenedorCarrito.innerHTML = "<em>El carrito está vacío.</em>";
     contenedorTotal.textContent = "";
@@ -72,7 +88,7 @@ function renderCarrito() {
     itemDiv.className = "carrito-item";
     itemDiv.innerHTML = `
       <div class="item-info">
-        <img src="${producto.imagen}" alt="${producto.nombre}" class="item-imagen" onerror="this.src='https://via.placeholder.com/40x40/cccccc/666666?text=${encodeURIComponent(producto.nombre.charAt(0))}'">
+        <img src="${producto.imagen}" alt="${producto.nombre}" class="item-imagen">
         <div class="item-details">
           <h4>${producto.nombre}</h4>
           <p class="item-precio">$${producto.precio.toLocaleString()}</p>
@@ -107,23 +123,27 @@ function renderCarrito() {
 }
 
 function incrementarCantidadProducto(index) {
-  incrementarCantidad(index);
-  renderCarrito(); // actualizo el carrito
+  const resultado = incrementarCantidad(index);
+  actualizarCarrito();
+  
+  if (!resultado) {
+    mostrarSweetAlert("Sin stock", "No hay más unidades disponibles", "warning");
+  }
 }
 
 function decrementarCantidadProducto(index) {
   const fueEliminado = decrementarCantidad(index);
   if (!fueEliminado) {
-    renderCarrito();
+    actualizarCarrito();
   } else {
-    renderCarrito();
+    actualizarCarrito();
     mostrarSweetAlert("Eliminado", "Producto eliminado del carrito", "warning");
   }
 }
 
 function quitarProductoDelCarrito(index) {
   const productoEliminado = quitarDelCarrito(index);
-  renderCarrito();
+  actualizarCarrito();
   mostrarSweetAlert("Eliminado", `${productoEliminado.nombre} eliminado del carrito`, "warning");
 }
 
@@ -184,11 +204,11 @@ async function mostrarFormularioEnvio() {
       <div style="text-align: left;">
         <div style="margin-bottom: 15px;">
           <label style="display: block; margin-bottom: 5px; font-weight: bold;"><i class="fas fa-user"></i> Nombre completo:</label>
-          <input id="nombre" class="swal2-input" placeholder="Tu nombre">
+          <input id="nombre" class="swal2-input" placeholder="Tu nombre" oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]/g, '')">
         </div>
         <div style="margin-bottom: 15px;">
           <label style="display: block; margin-bottom: 5px; font-weight: bold;"><i class="fas fa-phone"></i> Teléfono:</label>
-          <input id="telefono" class="swal2-input" placeholder="Tu teléfono">
+          <input id="telefono" class="swal2-input" placeholder="Tu teléfono" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
         </div>
         <div style="margin-bottom: 15px;">
           <label style="display: block; margin-bottom: 5px; font-weight: bold;"><i class="fas fa-map-marker-alt"></i> Dirección:</label>
@@ -207,6 +227,11 @@ async function mostrarFormularioEnvio() {
       
       if (!nombre || !telefono || !direccion) {
         Swal.showValidationMessage('Completá todos los campos obligatorios');
+        return false;
+      }
+      
+      if (telefono.length < 8) {
+        Swal.showValidationMessage('El teléfono debe tener al menos 8 dígitos');
         return false;
       }
       
@@ -262,6 +287,8 @@ async function mostrarHistorial() {
     </div>
   `}).join('');
 
+
+  
   await Swal.fire({
     title: '<i class="fas fa-history"></i> Historial de pedidos',
     html: `
@@ -278,6 +305,11 @@ async function mostrarHistorial() {
 async function procesarCheckout() {
   if (carritoVacio()) {
     mostrarSweetAlert("Carrito vacío", "No podes confirmar el pedido sin productos", "error");
+    return;
+  }
+  
+  if (!validarCarrito(obtenerCarrito())) {
+    mostrarSweetAlert("Error", "El carrito tiene productos sin stock disponible", "error");
     return;
   }
   
@@ -321,7 +353,7 @@ async function procesarCheckout() {
   });
   
   if (result.isConfirmed) {
-    contadorPedidos++; // incrementa el contador
+    contadorPedidos++; // para incrementar el contador
     
     const nuevoPedido = {
       id: generarIdPedido(),
@@ -336,12 +368,15 @@ async function procesarCheckout() {
     historialPedidos.unshift(nuevoPedido);
     guardarHistorial();
     
+    descontarStock(obtenerCarrito());
+    
+
+    
     await Swal.fire({
       title: '¡Pedido Confirmado! <i class="fas fa-utensils"></i>',
       html: `
         <div style="text-align: center;">
           <div style="font-size: 3em; margin: 20px 0;"><i class="fas fa-rocket"></i></div>
-          <p>Tu pedido está siendo preparado</p>
           <p><strong>Tiempo estimado: 25-30 minutos</strong></p>
           <p style="margin-top: 20px; color: #28a745;">¡Gracias por elegirnos!</p>
           <p style="margin-top: 10px; font-size: 0.9em; color: #6c757d;">
@@ -354,7 +389,7 @@ async function procesarCheckout() {
     });
     
     vaciarCarrito();
-    renderCarrito();
+    actualizarCarrito();
   }
 }
 
@@ -367,7 +402,7 @@ botonVaciar.addEventListener("click", async () => {
   }
   
   const result = await Swal.fire({
-    title: '¿Vaciar carrito?',
+    title: '¿Queres vaciar el carrito?',
     icon: 'warning',
     showCancelButton: true,
     confirmButtonColor: '#dc3545',
@@ -378,7 +413,7 @@ botonVaciar.addEventListener("click", async () => {
   
   if (result.isConfirmed) {
     vaciarCarrito();
-    renderCarrito();
+    actualizarCarrito();
     mostrarSweetAlert("Carrito vaciado", "Todos los productos fueron removidos", "success");
   }
 });

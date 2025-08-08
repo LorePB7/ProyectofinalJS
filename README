@@ -1,1 +1,76 @@
-falta terminar
+# Simulador de Pedidos
+
+Proyecto final de JavaScript para Coderhouse.
+Esta app es un simulador de pedidos para comida rapida donde los usuarios pueden ver los productos, agregarlos al carrito, seleccionar el metodo de pago, ingresar datos del envío y confirmar la compra. 
+
+## Que funciones tiene
+
+- Carga productos desde el archivo JSON, que se encuentra en la carpeta db.
+- Carrito de compras donde podes agregar y quitar los productos.
+- Guarda todo en localStorage.
+- Se puede ver el Historial de pedidos.
+- Utilizo Sweet Alert para las alertas.
+- Contiene Validaciones para todos los formularios.
+- Try-catch para manejo de los errores.
+
+## Tecnologias
+
+HTML, CSS, JavaScript.
+Librerias usadas: SweetAlert para las alertas y los cuadros de dialogo, y Font Awesome para los íconos.
+
+## Archivos
+
+- index.html (pagina principal)
+- js/main.js (logica principal )
+- js/carrito.js (funciones del carrito)
+- db/data.json (JSON para los datos de los productos)
+- styles/styles.css (estilos)
+- assets/ (imagenes)
+
+## Como usar
+
+1. Abrir el index.html.
+2. Agregar productos al carrito.
+3. Modificar las cantidades o vaciar el carrito si es necesario.
+4. Elegir metodo de pago.
+5. Completar datos para el envío.
+6. Confirmar el pedido.
+
+
+## Funciones principales de los archivos .js
+
+main.js:
+- cargarProductos() - Trae los productos desde el JSON y los guarda en el array menu
+- mostrarMenu() - Muestra todos los productos en la página
+- agregarProductoAlCarrito(id) - Agrega un producto al carrito cuando hacés clic
+- actualizarCarrito() - Actualiza lo que se ve en el carrito y el contador
+- incrementarCantidadProducto(index) - Aumenta la cantidad de un producto en el carrito
+- decrementarCantidadProducto(index) - Baja la cantidad o elimina el producto si llega a 0
+- quitarProductoDelCarrito(index) - Elimina completamente un producto del carrito
+- guardarHistorial() - Guarda el historial de pedidos en localStorage
+- mostrarSweetAlert(titulo, mensaje, tipo) - Muestra alertas 
+- mostrarOpcionesPago() - Muestra las opciones de pago (efectivo o transferencia)
+- mostrarFormularioEnvio() - Muestra el formulario para datos del envío
+- mostrarHistorial() - Muestra todos los pedidos anteriores
+- procesarCheckout() - Procesa todo el pedido desde el carrito hasta confirmar
+
+carrito.js:
+- agregarAlCarrito(id, menu) - Agrega un producto al array del carrito
+- incrementarCantidad(index) - Aumenta la cantidad de un producto
+- decrementarCantidad(index) - Baja la cantidad o elimina el producto
+- quitarDelCarrito(index) - Elimina un producto del carrito
+- calcularTotal() - Suma el precio de todos los productos
+- guardarCarrito() - Guarda el carrito en localStorage
+- obtenerCarrito() - Devuelve el array del carrito
+- vaciarCarrito() - Limpia todo el carrito
+- obtenerCantidadProductos() - Cuenta cuántos productos hay en total
+- carritoVacio() - Verifica si el carrito está vacío
+- generarIdPedido() - Crea un ID único para cada pedido
+- validarCarrito(carrito) - Verifica que el carrito sea válido y tenga stock
+- descontarStock(carrito) - Descuenta el stock cuando se confirma un pedido
+
+## Autor
+
+Lorenzo Píccolo
+
+Proyecto final de JavaScript para Coderhouse.
